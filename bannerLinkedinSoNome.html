@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner LinkedIn - Lucas Martins</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Exo+2:wght@700&display=swap');
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #10101a;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Container principal com as dimensões exatas do banner do LinkedIn */
+        .linkedin-banner {
+            width: 1584px;
+            height: 396px;
+            position: relative;
+            overflow: hidden;
+            background-color: #050816; /* Fundo escuro base */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Canvas para o efeito de fundo binário */
+        #binary-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Sobreposição em gradiente para melhorar a legibilidade e o estilo */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(5, 8, 22, 1) 25%, rgba(5, 8, 22, 0.7) 55%, rgba(5, 8, 22, 0.3) 100%);
+            z-index: 2;
+        }
+
+        /* Container para o conteúdo principal, posicionado à direita */
+        .content {
+            position: absolute;
+            top: 42%; /* Ajustado para mover o nome para cima */
+            right: 80px; /* Espaçamento da borda direita */
+            transform: translateY(-50%);
+            z-index: 3;
+            color: #ffffff;
+            width: 650px;
+            text-align: right;
+        }
+
+        .content h1 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 68px;
+            margin: 0;
+            font-weight: 700;
+            color: #00e5ff; /* Ciano vibrante */
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7), 0 0 20px rgba(0, 229, 255, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="linkedin-banner">
+        <!-- Canvas para o efeito de cascata binária estático -->
+        <canvas id="binary-canvas"></canvas>
+        
+        <!-- Sobreposição para estilo e legibilidade -->
+        <div class="overlay"></div>
+
+        <!-- Conteúdo principal (informações) -->
+        <div class="content">
+            <h1>Lucas Martins</h1>
+        </div>
+    </div>
+
+    <script>
+        // Seleciona o elemento canvas e obtém seu contexto 2D
+        const canvas = document.getElementById('binary-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Define a largura e altura do canvas para preencher o container
+        canvas.width = 1584;
+        canvas.height = 396;
+
+        const binary = '01';
+        const fontSize = 14;
+        const columns = Math.floor(canvas.width / fontSize);
+
+        // Define a cor de fundo do canvas
+        ctx.fillStyle = 'rgba(5, 8, 22, 1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Desenha os rastros de código binário estáticos
+        for (let i = 0; i < columns; i++) {
+            // Define uma posição Y aleatória para a "cabeça" do rastro
+            const headY = Math.random() * canvas.height * 1.2 - (canvas.height * 0.2);
+            // Define um comprimento aleatório para o rastro
+            const trailLength = Math.random() * (canvas.height / (fontSize * 2)) + 8;
+
+            // Desenha cada caractere do rastro
+            for (let j = 0; j < trailLength; j++) {
+                const y = headY - j * fontSize;
+                // Pula o caractere se estiver fora da tela
+                if (y < 0 || y > canvas.height) continue;
+
+                const char = binary.charAt(Math.floor(Math.random() * binary.length));
+                
+                // O caractere na "cabeça" do rastro é mais brilhante
+                if (j === 0) {
+                    ctx.fillStyle = '#cceeff'; // Um ciano quase branco para a cabeça
+                    ctx.shadowColor = '#00e5ff';
+                    ctx.shadowBlur = 10;
+                } else {
+                    // O resto do rastro vai perdendo o brilho
+                    const opacity = 1 - (j / trailLength) * 0.7;
+                    ctx.fillStyle = `rgba(0, 229, 255, ${opacity})`;
+                    ctx.shadowBlur = 0; // Sem brilho para a cauda
+                }
+                
+                ctx.font = fontSize + 'px monospace';
+                ctx.fillText(char, i * fontSize, y);
+            }
+        }
+    </script>
+
+</body>
+</html>
