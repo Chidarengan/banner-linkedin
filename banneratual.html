@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner LinkedIn - Lucas Martins</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Exo+2:wght@700&display=swap');
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f3f2ef; /* Cor de fundo similar ao LinkedIn para teste */
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Container principal com as dimensões exatas do banner do LinkedIn */
+        .linkedin-banner {
+            width: 1584px;
+            height: 396px;
+            position: relative;
+            overflow: hidden;
+            background-color: #000000; /* Fundo preto sólido */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Canvas para o efeito de fundo binário */
+        #binary-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* Sobreposição na base para mesclar com o fundo branco */
+        .bottom-glow-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px; /* Altura do brilho */
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.10), transparent);
+            z-index: 4; /* Fica por cima de tudo */
+        }
+
+        /* Container para o conteúdo principal, posicionado à direita */
+        .content {
+            position: absolute;
+            top: 50%;
+            right: 100px;
+            transform: translateY(-50%);
+            z-index: 3; /* Fica por cima do canvas */
+            color: #ffffff;
+            width: auto; 
+            text-align: right; 
+        }
+
+        .content h2,
+        .content .contact-info {
+            background-color: rgba(0, 0, 0, 0.65); 
+            padding: 0.3em 0.6em; 
+            border-radius: 8px; 
+            display: inline-block; 
+            margin-bottom: 1rem; 
+            text-align: left; 
+        }
+
+        .content h1 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 82px; 
+            margin: 0;
+            margin-bottom: 1rem; 
+            font-weight: 700;
+            color: #00e5ff; 
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7), 0 0 20px rgba(0, 229, 255, 0.5);
+            display: inline-block; 
+        }
+
+        .content h2 {
+            font-size: 30px; 
+            margin-top: 1rem;
+            margin-bottom: 2.5rem; 
+            font-weight: 400;
+            color: #e0e0e0; 
+            letter-spacing: 1px;
+        }
+
+        .contact-info {
+            gap: 15px; 
+            display: inline-flex; 
+            align-items: center;
+        }
+        
+        .contact-info:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-info span, .contact-info a {
+            font-size: 22px;
+            color: #c0c0c0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .contact-info a:hover {
+            color: #00e5ff; 
+        }
+
+        .contact-info .icon {
+            width: 24px;
+            height: 24px;
+            fill: #00e5ff; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="linkedin-banner">
+        <canvas id="binary-canvas"></canvas>
+        <!-- O fade-overlay foi removido daqui -->
+        <div class="bottom-glow-overlay"></div>
+
+        <div class="content">
+            <div><h1>Lucas Martins</h1></div>
+            <div><h2>Desenvolvedor de Software</h2></div>
+            <div><div class="contact-info">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <a href="mailto:lucasdesamartins@hotmail.com">lucasdesamartins@hotmail.com</a>
+            </div></div>
+            <div><div class="contact-info">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"></path>
+                </svg>
+                <span>+55 (92) 98153-7475</span>
+            </div></div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('binary-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = 1584;
+        canvas.height = 396;
+
+        const chars = '01';
+        const fontSize = 24;
+        const columns = Math.floor(canvas.width / fontSize);
+
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        for (let i = 0; i < columns; i++) {
+            
+            if (Math.random() > 0.97) { 
+                continue;
+            }
+
+            const headY = Math.random() * canvas.height * 1.2 - (canvas.height * 0.2);
+            const trailLength = Math.random() * (canvas.height / (fontSize * 1.5)) + 10;
+
+            // MUDANÇA: A transparência volta a ser controlada pelo script de forma sutil
+            const horizontalOpacity = (i / columns) * 0.4; // Multiplicador baixo para manter a sutileza
+
+            for (let j = 0; j < trailLength; j++) {
+                const y = headY - j * fontSize;
+                if (y < 0 || y > canvas.height) continue;
+
+                const char = chars.charAt(Math.floor(Math.random() * chars.length));
+                
+                const verticalOpacity = Math.max(0, 1 - (j / trailLength) * 0.7);
+                const finalOpacity = verticalOpacity * horizontalOpacity;
+                
+                if (j === 0) {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${horizontalOpacity})`; 
+                    ctx.shadowColor = '#00e5ff';
+                    ctx.shadowBlur = 15;
+                } else {
+                    ctx.fillStyle = `rgba(0, 229, 255, ${finalOpacity})`;
+                    ctx.shadowBlur = 0;
+                }
+                
+                ctx.font = `bold ${fontSize}px monospace`;
+                ctx.fillText(char, i * fontSize, y);
+            }
+        }
+    </script>
+
+</body>
+</html>
