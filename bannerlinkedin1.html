@@ -54,7 +54,7 @@
             top: 50%;
             right: 80px; /* Espaçamento da borda direita */
             transform: translateY(-50%);
-            z-index: 3;
+            z-index: 4; /* Acima dos elementos decorativos */
             color: #ffffff;
             width: 650px;
             text-align: right;
@@ -95,17 +95,31 @@
             height: 22px;
             fill: #00e5ff; /* Ciano nos ícones */
         }
+        
+        /* Linha horizontal decorativa */
+        .horizontal-line {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            height: 3px; /* Aumentado para 3px para ser mais grossa */
+            z-index: 3;
+            background: linear-gradient(to right, rgba(0, 229, 255, 0.6) 20%, rgba(0, 229, 255, 0) 70%);
+        }
 
     </style>
 </head>
 <body>
 
     <div class="linkedin-banner">
-        <!-- Canvas para o efeito de cascata binária estático -->
+        <!-- Canvas para o fundo */ -->
         <canvas id="binary-canvas"></canvas>
         
         <!-- Sobreposição para estilo e legibilidade -->
         <div class="overlay"></div>
+
+        <!-- Linha horizontal decorativa -->
+        <div class="horizontal-line"></div>
 
         <!-- Conteúdo principal (informações) -->
         <div class="content">
@@ -123,47 +137,38 @@
     </div>
 
     <script>
-        // Seleciona o elemento canvas e obtém seu contexto 2D
         const canvas = document.getElementById('binary-canvas');
         const ctx = canvas.getContext('2d');
 
-        // Define a largura e altura do canvas para preencher o container
         canvas.width = 1584;
         canvas.height = 396;
-
+        
         const binary = '01';
         const fontSize = 14;
         const columns = Math.floor(canvas.width / fontSize);
 
-        // Define a cor de fundo do canvas
+        // Desenha o fundo de cascata vertical
         ctx.fillStyle = 'rgba(5, 8, 22, 1)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Desenha os rastros de código binário estáticos
         for (let i = 0; i < columns; i++) {
-            // Define uma posição Y aleatória para a "cabeça" do rastro
             const headY = Math.random() * canvas.height * 1.2 - (canvas.height * 0.2);
-            // Define um comprimento aleatório para o rastro
             const trailLength = Math.random() * (canvas.height / (fontSize * 2)) + 8;
 
-            // Desenha cada caractere do rastro
             for (let j = 0; j < trailLength; j++) {
                 const y = headY - j * fontSize;
-                // Pula o caractere se estiver fora da tela
                 if (y < 0 || y > canvas.height) continue;
 
                 const char = binary.charAt(Math.floor(Math.random() * binary.length));
                 
-                // O caractere na "cabeça" do rastro é mais brilhante
                 if (j === 0) {
-                    ctx.fillStyle = '#cceeff'; // Um ciano quase branco para a cabeça
+                    ctx.fillStyle = '#cceeff';
                     ctx.shadowColor = '#00e5ff';
                     ctx.shadowBlur = 10;
                 } else {
-                    // O resto do rastro vai perdendo o brilho
                     const opacity = 1 - (j / trailLength) * 0.7;
                     ctx.fillStyle = `rgba(0, 229, 255, ${opacity})`;
-                    ctx.shadowBlur = 0; // Sem brilho para a cauda
+                    ctx.shadowBlur = 0;
                 }
                 
                 ctx.font = fontSize + 'px monospace';
